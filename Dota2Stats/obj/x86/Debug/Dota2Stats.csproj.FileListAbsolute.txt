@@ -1,0 +1,14 @@
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\obj\x86\Debug\Dota2Stats.csprojResolveAssemblyReference.cache
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\obj\x86\Debug\Dota2Stats.Properties.Resources.resources
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\obj\x86\Debug\Dota2Stats.csproj.GenerateResource.Cache
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\bin\Debug\Dota2Stats.exe.config
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\bin\Debug\Dota2Stats.exe
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\bin\Debug\Dota2Stats.pdb
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\bin\Debug\Dota2Api.dll
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\bin\Debug\Newtonsoft.Json.dll
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\bin\Debug\Dota2Api.pdb
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\bin\Debug\Newtonsoft.Json.pdb
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\bin\Debug\Newtonsoft.Json.xml
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\obj\x86\Debug\Dota2Stats.exe
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\obj\x86\Debug\Dota2Stats.pdb
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\obj\x86\Debug\Dota2Stats.MainWindow.resources
