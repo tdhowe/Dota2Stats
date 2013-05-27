@@ -12,3 +12,4 @@ D:\Documents\VsProjects\Dota2Stats\Dota2Stats\bin\Debug\Newtonsoft.Json.xml
 D:\Documents\VsProjects\Dota2Stats\Dota2Stats\obj\x86\Debug\Dota2Stats.exe
 D:\Documents\VsProjects\Dota2Stats\Dota2Stats\obj\x86\Debug\Dota2Stats.pdb
 D:\Documents\VsProjects\Dota2Stats\Dota2Stats\obj\x86\Debug\Dota2Stats.MainWindow.resources
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\obj\x86\Debug\Dota2Stats.SteamIDWindow.resources

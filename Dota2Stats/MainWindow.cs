@@ -11,6 +11,9 @@ using Dota2WebAPISDK.ApiObjects.MatchHistory;
 using Dota2WebAPISDK.Configuration;
 using Dota2WebAPISDK.ApiObjects.Teams;
 using Dota2WebAPISDK.Engines;
+using Dota2WebAPISDK.ApiObjects.PlayerSummary;
+using Dota2Stats.Utils;
+using Dota2WebAPISDK.ApiObjects.VanityURL;
 
 
 namespace Dota2Stats
@@ -18,9 +21,13 @@ namespace Dota2Stats
     public partial class MainWindow : Form
     {
         private WebAPISDKEngine apiEngine;
+        private SteamIDWindow steamIDWindow;
+
         public MainWindow()
         {
             apiEngine = new WebAPISDKEngine();
+            steamIDWindow = new SteamIDWindow();
+
             InitializeComponent();
 
             configListView();
@@ -45,7 +52,8 @@ namespace Dota2Stats
             string player = text_playername.Text;
 
             MatchHistory hist;
-            long account_id;
+            MatchDetailsPlayer requestedPlayer = null;
+            long account_id = 0;
 
             if (long.TryParse(player, out account_id) )
             {
@@ -56,20 +64,29 @@ namespace Dota2Stats
                 hist = apiEngine.GetMatchHistory(player);
             }
 
-            foreach( Dota2WebAPISDK.ApiObjects.MatchHistory.Match m in hist.Matches )
+            foreach( Match m in hist.Matches )
             {
-                Dota2WebAPISDK.ApiObjects.MatchDetails.Match currentMatch = apiEngine.GetMatchDetails(m.MatchID);
+                MatchDetails currentMatch = apiEngine.GetMatchDetails(m.MatchID);
 
-
-                foreach (Dota2WebAPISDK.ApiObjects.MatchDetails.Player p in currentMatch.Players)
+                long[] requestedplayers = new long[currentMatch.Players.Count];
+                for (int i = 0; i < currentMatch.Players.Count; i++)
                 {
-                    Dota2WebAPISDK.ApiObjects.PlayerSummary.PlayerSummary ps = apiEngine.GetPlayerSummary(p.AccountID + 76561197960265728);
+                    requestedplayers[i] = SteamUtils.SteamID32To64(currentMatch.Players[i].AccountID);
+                }
 
-                    if (ps == null)
-                        continue;
-                    foreach(Dota2WebAPISDK.ApiObjects.PlayerSummary.Player currentPlayer in ps.Players)
+                PlayerSummary ps = apiEngine.GetPlayerSummaries(requestedplayers);
+
+                if (ps == null)
+                    continue;
+
+                foreach (Player currentPlayer in ps.Players)
+                {
+                    /* find the requested player based on either accnt id or steam name */
+                    if (((account_id != 0) && (currentPlayer.SteamID.Equals(account_id.ToString())))
+                        || (player.Equals(currentPlayer.Name)))
                     {
-                        Console.WriteLine(currentPlayer.Name);
+                        /* we have found a match for the requested player in this game.  get stats about them */
+                        //requestedPlayer = currentPlayer;
                     }
                 }
 
@@ -77,14 +94,42 @@ namespace Dota2Stats
                 lvi.SubItems.Add(m.LobbyType.ToString());
                 lvi.SubItems.Add((currentMatch.RadiantWin ? "Radiant Victory" : "Dire Victory"));
 
-                
-                
-
                 this.list_results.Items.Add(lvi);
             }
 
             this.list_results.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             
         }
+
+        private void button_FindAccount_Click(object sender, EventArgs e)
+        {
+            steamIDWindow.ShowDialog();
+            if (steamIDWindow.AccountID.Length > 0)
+            {
+                text_playername.Text = parseSteamID(steamIDWindow.AccountID);
+            }
+        }
+
+        private string parseSteamID(string id)
+        {
+            string steamid = "";
+
+            if (id.Contains("id"))
+            {
+                /* this is a custom id url.  We are going to have to request the account id */
+                VanityURLResult vur = apiEngine.ResolveVanityURL(id.Replace("id/", ""));
+                steamid = vur.SteamID;
+            }
+            else
+            {
+                /* just strip out the "profiles/" part and we have the id */
+                steamid = id.Replace("profiles/", "");
+            }
+
+            return steamid;
+        }
+    
+        
     }
+
 }
