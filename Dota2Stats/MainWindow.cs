@@ -8,9 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
 
-using Dota2WebAPISDK;
 using Newtonsoft;
 
+using Dota2WebAPISDK;
 using Dota2WebAPISDK.ApiObjects.MatchDetails;
 using Dota2WebAPISDK.ApiObjects.MatchHistory;
 using Dota2WebAPISDK.Configuration;
@@ -20,8 +20,7 @@ using Dota2WebAPISDK.ApiObjects.PlayerSummary;
 using Dota2WebAPISDK.ApiObjects.VanityURL;
 
 using Dota2Stats.Utils;
-
-
+using Dota2WebAPISDK.ApiObjects.Heroes;
 
 namespace Dota2Stats
 {
@@ -55,16 +54,6 @@ namespace Dota2Stats
         {
             apiEngine = new WebAPISDKEngine();
             steamIDWindow = new SteamIDWindow();
-
-            this.list_results.Columns.Add("Match ID");
-            this.list_results.Columns.Add("Game Type");
-            this.list_results.Columns.Add("Result");
-            this.list_results.Columns.Add("Hero");
-            this.list_results.Columns.Add("Kills");
-            this.list_results.Columns.Add("Deaths");
-            this.list_results.Columns.Add("Assists");
-            this.list_results.Columns.Add("GPM");
-            this.list_results.Columns.Add("XPM");
         }
 
         private void button_getStats_Click(object sender, EventArgs e)
@@ -73,13 +62,13 @@ namespace Dota2Stats
             this.statusBar.Invalidate();
             this.Cursor = Cursors.WaitCursor;
 
-            list_results.Items.Clear();
+            list_results.ClearObjects();
 
 
             //TODO: Move this shit into its own function
 
             MatchHistory hist;
-            MatchDetailsPlayer requestedPlayer = null;
+            List<PlayerGameStats> playerGames = new List<PlayerGameStats>();
             long account_id;
 
             if (long.TryParse(text_playername.Text, out account_id))
@@ -102,18 +91,7 @@ namespace Dota2Stats
                     }
                     else
                     {
-                        ListViewItem lvi = CreateMatchListView(m.MatchID.ToString(),
-                                                               m.LobbyType.ToString(),
-                                                               currentMatch.RadiantWin.ToString(), //todo: use player slot to determine victory status
-                                                               p.HeroID.ToString(), // todo: use heroid to determine hero
-                                                               p.Kills.ToString(),
-                                                               p.Deaths.ToString(),
-                                                               p.Assists.ToString(),
-                                                               p.GoldPerMinute.ToString(),
-                                                               p.XPPerMinute.ToString()
-                                                               );
-
-                        this.list_results.Items.Add(lvi);
+                        playerGames.Add(new PlayerGameStats(currentMatch, p));
                         this.statusBar.Text += ".";
                     }
                 }
@@ -124,7 +102,7 @@ namespace Dota2Stats
                                 "Invalid ID", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
-            this.list_results.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            this.list_results.AddObjects(playerGames);
 
             this.statusBar.Text = "Ready";
             this.statusBar.Invalidate();
@@ -162,21 +140,6 @@ namespace Dota2Stats
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private ListViewItem CreateMatchListView(string match_id, string game_type, string result, string hero, string kills, string deaths, string assists, string gpm, string xpm)
-        {
-            ListViewItem lvi = new ListViewItem(match_id, 0);
-            lvi.SubItems.Add(game_type);
-            lvi.SubItems.Add(result);
-            lvi.SubItems.Add(hero);
-            lvi.SubItems.Add(kills);
-            lvi.SubItems.Add(deaths);
-            lvi.SubItems.Add(assists);
-            lvi.SubItems.Add(gpm);
-            lvi.SubItems.Add(xpm);
-
-            return lvi;
         }
     }
 

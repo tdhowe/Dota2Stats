@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.button_getStats = new System.Windows.Forms.Button();
             this.text_playername = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.list_results = new System.Windows.Forms.ListView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button_FindAccount = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -39,8 +39,19 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusBar = new System.Windows.Forms.StatusBar();
+            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+            this.list_results = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn0 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.groupBox1.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.list_results)).BeginInit();
             this.SuspendLayout();
             // 
             // button_getStats
@@ -69,18 +80,6 @@
             this.label1.Size = new System.Drawing.Size(96, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Account ID (64-bit)";
-            // 
-            // list_results
-            // 
-            this.list_results.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.list_results.Location = new System.Drawing.Point(14, 175);
-            this.list_results.Name = "list_results";
-            this.list_results.Size = new System.Drawing.Size(544, 474);
-            this.list_results.TabIndex = 3;
-            this.list_results.UseCompatibleStateImageBehavior = false;
-            this.list_results.View = System.Windows.Forms.View.Details;
             // 
             // groupBox1
             // 
@@ -117,8 +116,6 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(570, 24);
@@ -136,7 +133,7 @@
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(97, 22);
             this.quitToolStripMenuItem.Text = "&Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
@@ -148,25 +145,113 @@
             this.statusBar.TabIndex = 7;
             this.statusBar.Text = "Ready";
             // 
+            // list_results
+            // 
+            this.list_results.AllColumns.Add(this.olvColumn8);
+            this.list_results.AllColumns.Add(this.olvColumn0);
+            this.list_results.AllColumns.Add(this.olvColumn1);
+            this.list_results.AllColumns.Add(this.olvColumn2);
+            this.list_results.AllColumns.Add(this.olvColumn3);
+            this.list_results.AllColumns.Add(this.olvColumn4);
+            this.list_results.AllColumns.Add(this.olvColumn5);
+            this.list_results.AllColumns.Add(this.olvColumn6);
+            this.list_results.AllColumns.Add(this.olvColumn7);
+            this.list_results.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.list_results.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn8,
+            this.olvColumn0,
+            this.olvColumn1,
+            this.olvColumn2,
+            this.olvColumn3,
+            this.olvColumn4,
+            this.olvColumn5,
+            this.olvColumn6,
+            this.olvColumn7});
+            this.list_results.FullRowSelect = true;
+            this.list_results.GridLines = true;
+            this.list_results.IsSimpleDragSource = true;
+            this.list_results.Location = new System.Drawing.Point(15, 175);
+            this.list_results.Name = "list_results";
+            this.list_results.ShowGroups = false;
+            this.list_results.Size = new System.Drawing.Size(543, 474);
+            this.list_results.TabIndex = 8;
+            this.list_results.UseCompatibleStateImageBehavior = false;
+            this.list_results.View = System.Windows.Forms.View.Details;
+            // 
+            // olvColumn0
+            // 
+            this.olvColumn0.AspectName = "GameType";
+            this.olvColumn0.CellPadding = null;
+            this.olvColumn0.Text = "Game Type";
+            // 
+            // olvColumn1
+            // 
+            this.olvColumn1.AspectName = "GameResult";
+            this.olvColumn1.CellPadding = null;
+            this.olvColumn1.Text = "Result";
+            // 
+            // olvColumn2
+            // 
+            this.olvColumn2.AspectName = "Hero";
+            this.olvColumn2.CellPadding = null;
+            this.olvColumn2.Text = "Hero";
+            // 
+            // olvColumn3
+            // 
+            this.olvColumn3.AspectName = "Kills";
+            this.olvColumn3.CellPadding = null;
+            this.olvColumn3.Text = "Kills";
+            // 
+            // olvColumn4
+            // 
+            this.olvColumn4.AspectName = "Deaths";
+            this.olvColumn4.CellPadding = null;
+            this.olvColumn4.Text = "Deaths";
+            // 
+            // olvColumn5
+            // 
+            this.olvColumn5.AspectName = "Assists";
+            this.olvColumn5.CellPadding = null;
+            this.olvColumn5.Text = "Assists";
+            // 
+            // olvColumn6
+            // 
+            this.olvColumn6.AspectName = "GPM";
+            this.olvColumn6.CellPadding = null;
+            this.olvColumn6.Text = "GPM";
+            // 
+            // olvColumn7
+            // 
+            this.olvColumn7.AspectName = "XPM";
+            this.olvColumn7.CellPadding = null;
+            this.olvColumn7.Text = "XPM";
+            // 
+            // olvColumn8
+            // 
+            this.olvColumn8.AspectName = "MatchID";
+            this.olvColumn8.CellPadding = null;
+            this.olvColumn8.Text = "MatchID";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(570, 677);
+            this.Controls.Add(this.list_results);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.list_results);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Menu = this.mainMenu1;
             this.MinimumSize = new System.Drawing.Size(418, 412);
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Dota 2 Stats Getter";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.list_results)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -177,7 +262,6 @@
         private System.Windows.Forms.Button button_getStats;
         private System.Windows.Forms.TextBox text_playername;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListView list_results;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button_FindAccount;
@@ -185,6 +269,17 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
         private System.Windows.Forms.StatusBar statusBar;
+        private System.Windows.Forms.MainMenu mainMenu1;
+        private BrightIdeasSoftware.ObjectListView list_results;
+        private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private BrightIdeasSoftware.OLVColumn olvColumn0;
+        private BrightIdeasSoftware.OLVColumn olvColumn2;
+        private BrightIdeasSoftware.OLVColumn olvColumn3;
+        private BrightIdeasSoftware.OLVColumn olvColumn4;
+        private BrightIdeasSoftware.OLVColumn olvColumn5;
+        private BrightIdeasSoftware.OLVColumn olvColumn6;
+        private BrightIdeasSoftware.OLVColumn olvColumn7;
+        private BrightIdeasSoftware.OLVColumn olvColumn8;
     }
 }
 

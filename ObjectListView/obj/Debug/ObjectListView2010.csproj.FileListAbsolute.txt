@@ -1,0 +1,7 @@
+D:\Documents\VsProjects\Dota2Stats\ObjectListView\bin\Debug\ObjectListView.dll
+D:\Documents\VsProjects\Dota2Stats\ObjectListView\bin\Debug\ObjectListView.pdb
+D:\Documents\VsProjects\Dota2Stats\ObjectListView\obj\Debug\BrightIdeasSoftware.Properties.Resources.resources
+D:\Documents\VsProjects\Dota2Stats\ObjectListView\obj\Debug\BrightIdeasSoftware.ColumnSelectionForm.resources
+D:\Documents\VsProjects\Dota2Stats\ObjectListView\obj\Debug\ObjectListView2010.csproj.GenerateResource.Cache
+D:\Documents\VsProjects\Dota2Stats\ObjectListView\obj\Debug\ObjectListView.dll
+D:\Documents\VsProjects\Dota2Stats\ObjectListView\obj\Debug\ObjectListView.pdb
