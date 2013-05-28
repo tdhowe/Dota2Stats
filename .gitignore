@@ -1,2 +1,5 @@
 
 *.suo
+Dota2Stats/bin/*
+Dota2Stats/obj/*
+Dota2Stats/obj/x86/Debug/DesignTimeResolveAssemblyReferences.cache
