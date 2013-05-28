@@ -6,14 +6,21 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Reflection;
+
+using Dota2WebAPISDK;
+using Newtonsoft;
+
 using Dota2WebAPISDK.ApiObjects.MatchDetails;
 using Dota2WebAPISDK.ApiObjects.MatchHistory;
 using Dota2WebAPISDK.Configuration;
 using Dota2WebAPISDK.ApiObjects.Teams;
 using Dota2WebAPISDK.Engines;
 using Dota2WebAPISDK.ApiObjects.PlayerSummary;
-using Dota2Stats.Utils;
 using Dota2WebAPISDK.ApiObjects.VanityURL;
+
+using Dota2Stats.Utils;
+
 
 
 namespace Dota2Stats
@@ -25,20 +32,34 @@ namespace Dota2Stats
 
         public MainWindow()
         {
-            apiEngine = new WebAPISDKEngine();
-            steamIDWindow = new SteamIDWindow();
+            /* load the embedded dll files */
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+                string resourceName = new AssemblyName(args.Name).Name + ".dll";
+                string resource = Array.Find(this.GetType().Assembly.GetManifestResourceNames(), element => element.EndsWith(resourceName));
+
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+                {
+                    Byte[] assemblyData = new Byte[stream.Length];
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+                    return Assembly.Load(assemblyData);
+                }
+            };
 
             InitializeComponent();
 
-            configListView();
-
+            InitializeWindowVariables();
         }
 
-        private void configListView()
+        private void InitializeWindowVariables()
         {
+            apiEngine = new WebAPISDKEngine();
+            steamIDWindow = new SteamIDWindow();
+
             this.list_results.Columns.Add("Match ID");
             this.list_results.Columns.Add("Game Type");
             this.list_results.Columns.Add("Result");
+            this.list_results.Columns.Add("Hero");
             this.list_results.Columns.Add("Kills");
             this.list_results.Columns.Add("Deaths");
             this.list_results.Columns.Add("Assists");
@@ -48,57 +69,66 @@ namespace Dota2Stats
 
         private void button_getStats_Click(object sender, EventArgs e)
         {
+            this.statusBar.Text = "Retrieving games...";
+            this.statusBar.Invalidate();
+            this.Cursor = Cursors.WaitCursor;
+
             list_results.Items.Clear();
-            string player = text_playername.Text;
+
+
+            //TODO: Move this shit into its own function
 
             MatchHistory hist;
             MatchDetailsPlayer requestedPlayer = null;
-            long account_id = 0;
+            long account_id;
 
-            if (long.TryParse(player, out account_id) )
+            if (long.TryParse(text_playername.Text, out account_id))
             {
                 hist = apiEngine.GetMatchHistory(account_id);
+
+                this.statusBar.Text = "Parsing stats";
+                this.statusBar.Invalidate();
+
+                foreach (Match m in hist.Matches)
+                {
+                    MatchDetails currentMatch = apiEngine.GetMatchDetails(m.MatchID);
+
+                    MatchDetailsPlayer p = currentMatch.Players.Where(player => Utils.SteamUtils.SteamID32To64(player.AccountID) == account_id).First();
+
+                    if (p == null)
+                    {
+                        MessageBox.Show("Parse Error.  No accound IDs were found for player " + account_id + " in match " + m.MatchID,
+                                        "Invalid ID", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
+                    else
+                    {
+                        ListViewItem lvi = CreateMatchListView(m.MatchID.ToString(),
+                                                               m.LobbyType.ToString(),
+                                                               currentMatch.RadiantWin.ToString(), //todo: use player slot to determine victory status
+                                                               p.HeroID.ToString(), // todo: use heroid to determine hero
+                                                               p.Kills.ToString(),
+                                                               p.Deaths.ToString(),
+                                                               p.Assists.ToString(),
+                                                               p.GoldPerMinute.ToString(),
+                                                               p.XPPerMinute.ToString()
+                                                               );
+
+                        this.list_results.Items.Add(lvi);
+                        this.statusBar.Text += ".";
+                    }
+                }
             }
             else
             {
-                hist = apiEngine.GetMatchHistory(player);
-            }
-
-            foreach( Match m in hist.Matches )
-            {
-                MatchDetails currentMatch = apiEngine.GetMatchDetails(m.MatchID);
-
-                long[] requestedplayers = new long[currentMatch.Players.Count];
-                for (int i = 0; i < currentMatch.Players.Count; i++)
-                {
-                    requestedplayers[i] = SteamUtils.SteamID32To64(currentMatch.Players[i].AccountID);
-                }
-
-                PlayerSummary ps = apiEngine.GetPlayerSummaries(requestedplayers);
-
-                if (ps == null)
-                    continue;
-
-                foreach (Player currentPlayer in ps.Players)
-                {
-                    /* find the requested player based on either accnt id or steam name */
-                    if (((account_id != 0) && (currentPlayer.SteamID.Equals(account_id.ToString())))
-                        || (player.Equals(currentPlayer.Name)))
-                    {
-                        /* we have found a match for the requested player in this game.  get stats about them */
-                        //requestedPlayer = currentPlayer;
-                    }
-                }
-
-                ListViewItem lvi = new ListViewItem(m.MatchID.ToString(), 0);
-                lvi.SubItems.Add(m.LobbyType.ToString());
-                lvi.SubItems.Add((currentMatch.RadiantWin ? "Radiant Victory" : "Dire Victory"));
-
-                this.list_results.Items.Add(lvi);
+                MessageBox.Show("Invalid Steam Account ID.  Use the button above to determine your 64-bit Steam Account ID",
+                                "Invalid ID", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 
             this.list_results.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-            
+
+            this.statusBar.Text = "Ready";
+            this.statusBar.Invalidate();
+            this.Cursor = Cursors.Default;
         }
 
         private void button_FindAccount_Click(object sender, EventArgs e)
@@ -128,8 +158,26 @@ namespace Dota2Stats
 
             return steamid;
         }
-    
-        
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private ListViewItem CreateMatchListView(string match_id, string game_type, string result, string hero, string kills, string deaths, string assists, string gpm, string xpm)
+        {
+            ListViewItem lvi = new ListViewItem(match_id, 0);
+            lvi.SubItems.Add(game_type);
+            lvi.SubItems.Add(result);
+            lvi.SubItems.Add(hero);
+            lvi.SubItems.Add(kills);
+            lvi.SubItems.Add(deaths);
+            lvi.SubItems.Add(assists);
+            lvi.SubItems.Add(gpm);
+            lvi.SubItems.Add(xpm);
+
+            return lvi;
+        }
     }
 
 }

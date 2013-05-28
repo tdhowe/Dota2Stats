@@ -22,6 +22,7 @@ namespace Dota2Stats
 
         public SteamIDWindow()
         {
+            AccountID = "";
             InitializeComponent();
         }
 
@@ -45,11 +46,11 @@ namespace Dota2Stats
 
                 /* get the lines with the image files and nicknames from the http result */
                 List<String> imageLines = new List<string> ( responseString.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
-                                                               .Where(line => line.Contains(imageSearchString))
-                                                             );
+                                                             .Where(line => line.Contains(imageSearchString))
+                                                           );
                 List<String> nameLines = new List<string> ( responseString.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
-                                                .Where(line => line.Contains(currentNameSearchString))
-                                                );
+                                                            .Where(line => line.Contains(currentNameSearchString))
+                                                          );
 
                 ImageList imageList = new ImageList();
                 imageList.ImageSize = new Size(64, 64);

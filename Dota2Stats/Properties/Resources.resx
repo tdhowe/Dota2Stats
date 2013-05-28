@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,9 +112,77 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="dota2" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        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
+</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Dota2Api" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\ref\lib\Dota2Api.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Newtonsoft_Json" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\ref\lib\Newtonsoft.Json.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

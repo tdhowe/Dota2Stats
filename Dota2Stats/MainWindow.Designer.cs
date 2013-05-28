@@ -33,11 +33,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.list_results = new System.Windows.Forms.ListView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button_FindAccount = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button_FindAccount = new System.Windows.Forms.Button();
+            this.statusBar = new System.Windows.Forms.StatusBar();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -76,23 +77,34 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.list_results.Location = new System.Drawing.Point(14, 175);
             this.list_results.Name = "list_results";
-            this.list_results.Size = new System.Drawing.Size(612, 470);
+            this.list_results.Size = new System.Drawing.Size(544, 474);
             this.list_results.TabIndex = 3;
             this.list_results.UseCompatibleStateImageBehavior = false;
             this.list_results.View = System.Windows.Forms.View.Details;
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.groupBox1.Controls.Add(this.button_FindAccount);
             this.groupBox1.Controls.Add(this.button_getStats);
             this.groupBox1.Controls.Add(this.text_playername);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(151, 27);
+            this.groupBox1.Location = new System.Drawing.Point(139, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(287, 142);
+            this.groupBox1.Size = new System.Drawing.Size(297, 142);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Query";
+            // 
+            // button_FindAccount
+            // 
+            this.button_FindAccount.Location = new System.Drawing.Point(70, 31);
+            this.button_FindAccount.Name = "button_FindAccount";
+            this.button_FindAccount.Size = new System.Drawing.Size(130, 40);
+            this.button_FindAccount.TabIndex = 3;
+            this.button_FindAccount.Text = "Find Account ID";
+            this.button_FindAccount.UseVisualStyleBackColor = true;
+            this.button_FindAccount.Click += new System.EventHandler(this.button_FindAccount_Click);
             // 
             // label2
             // 
@@ -109,7 +121,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(638, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(570, 24);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -126,27 +138,28 @@
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.quitToolStripMenuItem.Text = "&Quit";
+            this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
-            // button_FindAccount
+            // statusBar
             // 
-            this.button_FindAccount.Location = new System.Drawing.Point(70, 31);
-            this.button_FindAccount.Name = "button_FindAccount";
-            this.button_FindAccount.Size = new System.Drawing.Size(130, 40);
-            this.button_FindAccount.TabIndex = 3;
-            this.button_FindAccount.Text = "Find Account ID";
-            this.button_FindAccount.UseVisualStyleBackColor = true;
-            this.button_FindAccount.Click += new System.EventHandler(this.button_FindAccount_Click);
+            this.statusBar.Location = new System.Drawing.Point(0, 655);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(570, 22);
+            this.statusBar.TabIndex = 7;
+            this.statusBar.Text = "Ready";
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(638, 665);
+            this.ClientSize = new System.Drawing.Size(570, 677);
+            this.Controls.Add(this.statusBar);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.list_results);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(418, 412);
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Dota 2 Stats Getter";
@@ -171,6 +184,7 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem quitToolStripMenuItem;
+        private System.Windows.Forms.StatusBar statusBar;
     }
 }
 
