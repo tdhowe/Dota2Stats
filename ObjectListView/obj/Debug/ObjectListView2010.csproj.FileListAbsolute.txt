@@ -5,3 +5,7 @@ D:\Documents\VsProjects\Dota2Stats\ObjectListView\obj\Debug\BrightIdeasSoftware.
 D:\Documents\VsProjects\Dota2Stats\ObjectListView\obj\Debug\ObjectListView2010.csproj.GenerateResource.Cache
 D:\Documents\VsProjects\Dota2Stats\ObjectListView\obj\Debug\ObjectListView.dll
 D:\Documents\VsProjects\Dota2Stats\ObjectListView\obj\Debug\ObjectListView.pdb
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\ref\lib\ObjectListView.dll
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\ref\lib\ObjectListView.pdb
+D:\Documents\VsProjects\Dota2Stats\Dota2Stats\ref\lib\ObjectListView.XML
+D:\Documents\VsProjects\Dota2Stats\ObjectListView\obj\Debug\ObjectListView2010.csprojResolveAssemblyReference.cache

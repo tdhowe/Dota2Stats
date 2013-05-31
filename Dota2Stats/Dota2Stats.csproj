@@ -36,7 +36,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;/appconfig:app.config</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PlayerGameStats.cs" />
+    <Compile Include="StatsFetcher.cs" />
     <Compile Include="SteamIDWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,12 +145,14 @@
   <ItemGroup>
     <EmbeddedResource Include="ref\lib\Dota2Api.dll" />
     <EmbeddedResource Include="ref\lib\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="ref\lib\ObjectListView.dll" />
     <Content Include="ref\resources\images\dota2.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ObjectListView\ObjectListView2010.csproj">
       <Project>{18FEDA0C-D147-4286-B39A-01204808106A}</Project>
       <Name>ObjectListView2010</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

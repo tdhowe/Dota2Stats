@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Dota2WebAPISDK.ApiObjects.MatchDetails;
 
-namespace Dota2Stats
+namespace Dota2Stats.Classes
 {
     public class PlayerGameStats
     {

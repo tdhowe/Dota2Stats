@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Reflection;
 
 using Newtonsoft;
+using BrightIdeasSoftware;
 
 using Dota2WebAPISDK;
 using Dota2WebAPISDK.ApiObjects.MatchDetails;
@@ -18,9 +19,12 @@ using Dota2WebAPISDK.ApiObjects.Teams;
 using Dota2WebAPISDK.Engines;
 using Dota2WebAPISDK.ApiObjects.PlayerSummary;
 using Dota2WebAPISDK.ApiObjects.VanityURL;
+using Dota2WebAPISDK.ApiObjects.Heroes;
 
 using Dota2Stats.Utils;
-using Dota2WebAPISDK.ApiObjects.Heroes;
+using Dota2Stats.Classes;
+using Dota2WebAPISDK.Enums;
+
 
 namespace Dota2Stats
 {
@@ -28,6 +32,7 @@ namespace Dota2Stats
     {
         private WebAPISDKEngine apiEngine;
         private SteamIDWindow steamIDWindow;
+        private StatsFetcher statsFetcher;
 
         public MainWindow()
         {
@@ -47,6 +52,15 @@ namespace Dota2Stats
 
             InitializeComponent();
 
+            /* initialize the first item in each combobox*/
+            foreach (var c in groupBox_Query.Controls)
+            {
+                if (c.GetType() == typeof(ComboBox))
+                {
+                    (c as ComboBox).SelectedIndex = 0;
+                }
+            }
+
             InitializeWindowVariables();
         }
 
@@ -54,59 +68,56 @@ namespace Dota2Stats
         {
             apiEngine = new WebAPISDKEngine();
             steamIDWindow = new SteamIDWindow();
+            statsFetcher = new StatsFetcher();
+
+            /* subscribe to statsFetcher events */
+            statsFetcher.PlayerGameDiscoveredEvent += statsFetcher_PlayerGameDiscoveredEvent;
+            statsFetcher.StatsCompleteEvent += statsFetcher_StatsCompleteEvent;
+        }
+
+        void statsFetcher_StatsCompleteEvent(object sender)
+        {
+            this.PeformOnUI(delegate()
+            {
+                this.statusBar.Text = "Ready";
+                this.statusBar.Invalidate();
+                this.Cursor = Cursors.Default;
+
+                if(this.list_results.GetItemCount() == 0)
+                {
+                    MessageBox.Show("Parse Error.  No accound IDs were found for player " + this.text_playername.Text,
+                                "Invalid ID", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            });
+        }
+
+        private void statsFetcher_PlayerGameDiscoveredEvent(object sender, PlayerGameStats pgs)
+        {
+            this.list_results.AddObject(pgs);
+            this.PeformOnUI(delegate()
+            {
+                this.statusBar.Text += ".";
+            });
         }
 
         private void button_getStats_Click(object sender, EventArgs e)
         {
-            this.statusBar.Text = "Retrieving games...";
-            this.statusBar.Invalidate();
-            this.Cursor = Cursors.WaitCursor;
-
             list_results.ClearObjects();
 
-
-            //TODO: Move this shit into its own function
-
-            MatchHistory hist;
-            List<PlayerGameStats> playerGames = new List<PlayerGameStats>();
-            long account_id;
-
-            if (long.TryParse(text_playername.Text, out account_id))
+            if (!backgroundWorker.IsBusy)
             {
-                hist = apiEngine.GetMatchHistory(account_id);
+                List<object> args = new List<object>();
 
-                this.statusBar.Text = "Parsing stats";
-                this.statusBar.Invalidate();
+                args.Add(int.Parse(comboBox_QueryAmount.Text));
 
-                foreach (Match m in hist.Matches)
+                foreach( int i in checkedListBox_GameModes.CheckedIndices )
                 {
-                    MatchDetails currentMatch = apiEngine.GetMatchDetails(m.MatchID);
-
-                    MatchDetailsPlayer p = currentMatch.Players.Where(player => Utils.SteamUtils.SteamID32To64(player.AccountID) == account_id).First();
-
-                    if (p == null)
-                    {
-                        MessageBox.Show("Parse Error.  No accound IDs were found for player " + account_id + " in match " + m.MatchID,
-                                        "Invalid ID", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    }
-                    else
-                    {
-                        playerGames.Add(new PlayerGameStats(currentMatch, p));
-                        this.statusBar.Text += ".";
-                    }
+                    args.Add((GameMode)i);
                 }
-            }
-            else
-            {
-                MessageBox.Show("Invalid Steam Account ID.  Use the button above to determine your 64-bit Steam Account ID",
-                                "Invalid ID", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
 
-            this.list_results.AddObjects(playerGames);
-
-            this.statusBar.Text = "Ready";
-            this.statusBar.Invalidate();
-            this.Cursor = Cursors.Default;
+                //TODO: Pass Values to background worker
+                backgroundWorker.RunWorkerAsync(args);
+            }
         }
 
         private void button_FindAccount_Click(object sender, EventArgs e)
@@ -140,6 +151,90 @@ namespace Dota2Stats
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        /// <summary>
+        ///  background thread cannot directly update the UI.  So call this function to do so
+        /// </summary>
+        /// <param name="m">delegate function to perform on UI</param>
+        private void PeformOnUI(MethodInvoker m)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(m);
+            }
+            else
+            {
+                m();
+            }
+        }
+
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            long account_id;
+            int amount;
+            List<GameMode> modes = new List<GameMode>();
+
+            List<object> args = e.Argument as List<object>;
+
+            amount = (int)args.ElementAt(0);
+            for (int i = 1; i < args.Count; i++)
+            {
+                modes.Add((GameMode)args.ElementAt(i));
+            }
+
+            if (long.TryParse(text_playername.Text, out account_id))
+            {
+                PeformOnUI(delegate()
+                {
+                    this.statusBar.Text = "Retrieving stats";
+                    this.statusBar.Invalidate();
+                });
+
+                statsFetcher.Fetch(apiEngine, account_id, modes, amount);
+            }
+            else
+            {
+                PeformOnUI(delegate()
+                {
+                    MessageBox.Show("Invalid Steam Account ID.  Use the button above to determine your 64-bit Steam Account ID",
+                            "Invalid ID", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                });
+            }
+
+        }
+
+        private void checkBox_Normal_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox box = sender as CheckBox;
+
+            if (box.Equals(checkBox_Normal))
+            {
+                checkBox_Bot.Checked = !box.Checked;
+            }
+            else
+            {
+                checkBox_Normal.Checked = !box.Checked;
+            }
+        }
+
+        private void checkedListBox_GameModes_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (e.Index == 0)
+            {
+                if (e.NewValue == CheckState.Checked)
+                {
+                    /* uncheck all the other checkboxes */
+                    foreach (GameMode gm in Enum.GetValues(typeof(GameMode)))
+                    {
+                        checkedListBox_GameModes.SetItemChecked((int)gm, false);
+                    }
+                }
+            }
+            else
+            {
+                checkedListBox_GameModes.SetItemChecked(0, false);
+            }
         }
     }
 

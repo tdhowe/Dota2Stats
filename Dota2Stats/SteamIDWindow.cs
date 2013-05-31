@@ -79,7 +79,7 @@ namespace Dota2Stats
                 {
                     ListViewItem lvi = new ListViewItem();
                     string account = imageList.Images.Keys[i];
-                    string displayname = Regex.Match(nameLines[i], "\">(\\S+)<").Groups[1].Value;
+                    string displayname = Regex.Match(nameLines[i], "\">(.+)<").Groups[1].Value;
 
                     lvi.ImageKey = account;
                     lvi.Text = displayname;
