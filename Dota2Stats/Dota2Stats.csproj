@@ -72,8 +72,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PlayerGameStats.cs" />
-    <Compile Include="StatsFetcher.cs" />
+    <Compile Include="GameStats\GameStats.cs" />
+    <Compile Include="GameStats\PlayerGameStats.cs" />
+    <Compile Include="GameStats\StatsFetcher.cs" />
     <Compile Include="SteamIDWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -89,6 +90,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="GameStats\TeamGameStats.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="SteamIDWindow.resx">
       <DependentUpon>SteamIDWindow.cs</DependentUpon>

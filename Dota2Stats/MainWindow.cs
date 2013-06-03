@@ -22,7 +22,7 @@ using Dota2WebAPISDK.ApiObjects.VanityURL;
 using Dota2WebAPISDK.ApiObjects.Heroes;
 
 using Dota2Stats.Utils;
-using Dota2Stats.Classes;
+using Dota2Stats.GameStats;
 using Dota2WebAPISDK.Enums;
 
 
@@ -73,20 +73,29 @@ namespace Dota2Stats
             /* subscribe to statsFetcher events */
             statsFetcher.PlayerGameDiscoveredEvent += statsFetcher_PlayerGameDiscoveredEvent;
             statsFetcher.StatsCompleteEvent += statsFetcher_StatsCompleteEvent;
+
+            /* add each property of a playergamestats object to the objectlistview */
+            foreach (PropertyInfo pi in typeof(PlayerGameStats).GetProperties())
+            {
+                OLVColumn col = new OLVColumn(pi.Name, pi.Name);
+                col.Text = pi.Name;
+                list_results.AllColumns.Add(col);
+            }
+            list_results.RebuildColumns();
         }
 
-        void statsFetcher_StatsCompleteEvent(object sender)
+        private void statsFetcher_StatsCompleteEvent(object sender)
         {
             this.PeformOnUI(delegate()
             {
                 this.statusBar.Text = "Ready";
                 this.statusBar.Invalidate();
-                this.Cursor = Cursors.Default;
+                this.progressBar.Visible = false;
 
                 if(this.list_results.GetItemCount() == 0)
                 {
-                    MessageBox.Show("Parse Error.  No accound IDs were found for player " + this.text_playername.Text,
-                                "Invalid ID", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("No results were found for these settings",
+                                "No Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             });
         }
@@ -110,12 +119,19 @@ namespace Dota2Stats
 
                 args.Add(int.Parse(comboBox_QueryAmount.Text));
 
-                foreach( int i in checkedListBox_GameModes.CheckedIndices )
+                if (checkBox_Normal.Checked)
                 {
-                    args.Add((GameMode)i);
+                    args.Add(LobbyType.MatchMaking);
+                }
+                if (checkBox_Bot.Checked)
+                {
+                    args.Add(LobbyType.CoOpWithBots);
+                }
+                if (checkBox_Team.Checked)
+                {
+                    args.Add(LobbyType.TeamMatch);
                 }
 
-                //TODO: Pass Values to background worker
                 backgroundWorker.RunWorkerAsync(args);
             }
         }
@@ -173,14 +189,14 @@ namespace Dota2Stats
         {
             long account_id;
             int amount;
-            List<GameMode> modes = new List<GameMode>();
+            List<LobbyType> types = new List<LobbyType>();
 
             List<object> args = e.Argument as List<object>;
 
             amount = (int)args.ElementAt(0);
             for (int i = 1; i < args.Count; i++)
             {
-                modes.Add((GameMode)args.ElementAt(i));
+                types.Add((LobbyType)args.ElementAt(i));
             }
 
             if (long.TryParse(text_playername.Text, out account_id))
@@ -189,9 +205,10 @@ namespace Dota2Stats
                 {
                     this.statusBar.Text = "Retrieving stats";
                     this.statusBar.Invalidate();
+                    this.progressBar.Visible = true;
                 });
 
-                statsFetcher.Fetch(apiEngine, account_id, modes, amount);
+                statsFetcher.Fetch(apiEngine, Utils.SteamUtils.SteamID64To32(account_id), types, amount);
             }
             else
             {
@@ -202,39 +219,6 @@ namespace Dota2Stats
                 });
             }
 
-        }
-
-        private void checkBox_Normal_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBox box = sender as CheckBox;
-
-            if (box.Equals(checkBox_Normal))
-            {
-                checkBox_Bot.Checked = !box.Checked;
-            }
-            else
-            {
-                checkBox_Normal.Checked = !box.Checked;
-            }
-        }
-
-        private void checkedListBox_GameModes_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            if (e.Index == 0)
-            {
-                if (e.NewValue == CheckState.Checked)
-                {
-                    /* uncheck all the other checkboxes */
-                    foreach (GameMode gm in Enum.GetValues(typeof(GameMode)))
-                    {
-                        checkedListBox_GameModes.SetItemChecked((int)gm, false);
-                    }
-                }
-            }
-            else
-            {
-                checkedListBox_GameModes.SetItemChecked(0, false);
-            }
         }
     }
 
